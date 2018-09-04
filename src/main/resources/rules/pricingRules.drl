@@ -11,7 +11,7 @@ dialect  "java"
 
 rule "Add Shipping fee"
 	when
-		quote : Quote(totalPrice < 75, shippingFee == 0)
+		quote : Quote(totalPrice - shippingFee < 75, shippingFee == 0)
 	then
 		QuoteActionModel quoteActionModel = new QuoteActionModel();
 		quoteActionModel.setQuoteName(quote.getName());
@@ -24,7 +24,7 @@ rule "Add Shipping fee"
 	end
 rule "Free Shipping"
 	when
-		quote: Quote(totalPrice >= 82, shippingFee > 0)
+		quote: Quote(totalPrice - shippingFee >= 75, shippingFee > 0)
 	then
         QuoteActionModel quoteActionModel = new QuoteActionModel();
 		quoteActionModel.setQuoteName(quote.getName());
@@ -39,7 +39,7 @@ rule "Free Shipping"
 
 rule "Change quantity to target total price"
     when
-		quote: Quote(targetPrice > 0, targetPrice < totalPrice)
+		quote: Quote(0 < targetPrice, targetPrice < totalPrice)
 	then
 	    QuoteLine quoteLine = quote.getQuoteLines().get(0);
 	    QuoteLine updateQuoteLineModel = new QuoteLine();
